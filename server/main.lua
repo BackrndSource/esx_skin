@@ -5,12 +5,13 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 RegisterServerEvent('esx_skin:save')
 AddEventHandler('esx_skin:save', function(skin)
 	local xPlayer = ESX.GetPlayerFromId(source)
-
-	MySQL.Async.execute('UPDATE users SET `skin` = @skin WHERE identifier = @identifier',
-	{
-		['@skin']       = json.encode(skin),
-		['@identifier'] = xPlayer.identifier
-	})
+	if xPlayer ~= nil then
+		MySQL.Async.execute('UPDATE users SET `skin` = @skin WHERE identifier = @identifier',
+		{
+			['@skin']       = json.encode(skin),
+			['@identifier'] = xPlayer.identifier
+		})
+	end
 end)
 
 RegisterServerEvent('esx_skin:responseSaveSkin')
@@ -34,26 +35,28 @@ end)
 
 ESX.RegisterServerCallback('esx_skin:getPlayerSkin', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
+		
+	if xPlayer ~= nil then
+		MySQL.Async.fetchAll('SELECT skin FROM users WHERE identifier = @identifier', {
+			['@identifier'] = xPlayer.identifier
+		}, function(users)
+			if users[1] ~= nil then
+				local user = users[1]
+				local skin = nil
 
-	MySQL.Async.fetchAll('SELECT skin FROM users WHERE identifier = @identifier', {
-		['@identifier'] = xPlayer.identifier
-	}, function(users)
-		if users[1] ~= nil then
-			local user = users[1]
-			local skin = nil
+				local jobSkin = {
+					skin_male   = xPlayer.job.skin_male,
+					skin_female = xPlayer.job.skin_female
+				}
 
-			local jobSkin = {
-				skin_male   = xPlayer.job.skin_male,
-				skin_female = xPlayer.job.skin_female
-			}
+				if user.skin ~= nil then
+					skin = json.decode(user.skin)
+				end
 
-			if user.skin ~= nil then
-				skin = json.decode(user.skin)
+				cb(skin, jobSkin)
 			end
-
-			cb(skin, jobSkin)
-		end
-	end)
+		end)
+	end
 end)
 
 -- Commands
