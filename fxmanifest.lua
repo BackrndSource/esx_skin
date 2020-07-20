@@ -1,4 +1,6 @@
-resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
+fx_version 'adamant'
+
+game 'gta5'
 
 description 'ESX Skin'
 
@@ -10,11 +12,11 @@ server_scripts {
 	'locales/de.lua',
 	'locales/br.lua',
 	'locales/en.lua',
-	'locales/es.lua',
 	'locales/fi.lua',
 	'locales/fr.lua',
 	'locales/sv.lua',
 	'locales/pl.lua',
+	'locales/es.lua',
 	'config.lua',
 	'server/main.lua'
 }
@@ -24,11 +26,11 @@ client_scripts {
 	'locales/de.lua',
 	'locales/br.lua',
 	'locales/en.lua',
-	'locales/es.lua',
 	'locales/fi.lua',
 	'locales/fr.lua',
 	'locales/sv.lua',
 	'locales/pl.lua',
+	'locales/es.lua',
 	'config.lua',
 	'client/main.lua'
 }
